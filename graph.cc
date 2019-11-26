@@ -79,7 +79,7 @@ void Graph::read(std::string file_name){
 	    }
 	    _file.close();
 	    _opened = true;
-	    if(!Graph::read_best("data/" + "w" + file_name)){
+	    if(!Graph::read_best("data/w" + file_name)){
 	    	best_path="N/A";
 			best_dist="N/A";
 	    }

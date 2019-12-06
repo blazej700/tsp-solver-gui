@@ -21,9 +21,7 @@ void DynamicProgramming::init(Graph graph) {
     }
 }
 
-/**
- * Frees up memory.
- */
+
 void DynamicProgramming::clean(Graph graph) {
 
     // Delete matrices if they already exist

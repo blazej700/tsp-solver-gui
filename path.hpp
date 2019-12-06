@@ -2,6 +2,11 @@
 #define path_hpp
 
 #include <vector>
+#include <algorithm> 
+#include <random>
+#include <string>
+#include <iostream>
+#include <chrono>
 #include "graph.hpp"
 
 class Path{
@@ -14,6 +19,7 @@ public:
 	Path(const Graph &graph);
 
 	virtual ~Path();
+	int size();
 	void set_graph(const Graph &graph);
 	int get(int n);
 	void add(int n);
@@ -30,6 +36,12 @@ public:
 	void fill_empyt();
 	int get_ad_info();
 	void set_ad_info(int n);
+	void swap(int i, int j);
+	void insert(int i, int j);
+	void invert(int i, int j);
+	void shuffle(int i, int j);
+
+	//int rand(int i);
 };
 
 

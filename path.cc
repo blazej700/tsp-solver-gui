@@ -1,9 +1,5 @@
 #include "path.hpp"
 
-#include <vector>
-#include <string>
-#include <iostream>
-
 #include "graph.hpp"
 
 Path::Path(){
@@ -17,6 +13,10 @@ Path::~Path(){
 
 Path::Path(const Graph &graph){
 	this->graph = graph;
+}
+
+int Path::size(){
+	return path.size();
 }
 
 
@@ -88,6 +88,7 @@ bool Path::is_in_befor(int city, int prev_city){
 		if(path[i] == city)
 			return true;
 	}
+	return false;
 }
 
 int Path::get_ad_info(){
@@ -100,4 +101,54 @@ void Path::set_ad_info(int n){
 
 void Path::set_graph(const Graph &graph){
 	this->graph = graph;
+}
+
+void Path::swap(int i, int j) {
+    std::swap(path[i], path[j]);
+}
+
+void Path::insert(int i, int j) {
+    int newY = path[i];
+    while (i > j) {
+        path[i] = path[i - 1];
+        --i;
+    }
+    while (i < j) {
+        path[i] = path[i + 1];
+        ++i;
+    }
+    path[j] = newY;
+}
+
+
+void Path::invert(int i, int j) {
+    if (i > j) std::swap(i, j);
+    while (i < j) {
+        std::swap(path[i], path[j]);
+        ++i;
+        --j;
+    }
+}
+
+void Path::shuffle(int i, int j){
+
+	std::vector <int> tmp_vector;
+
+	for(int l=i; l<j+1; l++){
+		tmp_vector.push_back(path[l]);
+	}
+
+	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+
+	std::shuffle(tmp_vector.begin(), tmp_vector.end(), std::default_random_engine(seed));
+
+
+	std::string _tmp = std::to_string(tmp_vector[0]);
+	for(int i = 1; i < tmp_vector.size(); i++){
+		_tmp += "->" + std::to_string(tmp_vector[i]);
+	}
+
+	for(int l=i; l<j+1; l++){
+		path[l]=tmp_vector[l-i];
+	}
 }

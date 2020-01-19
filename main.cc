@@ -5,12 +5,46 @@
 #include "dp.hpp"
 #include "sa.hpp"
 #include "ts.hpp"
+#include "ga.hpp"
 #include <iostream>
 #include <chrono>
 #include <fstream>
 
 
-int main3(){
+int mainT(){
+
+	GeneticAlg ga;
+
+	Graph graph("tsp_120.txt");
+	Path p1(graph);
+	
+	/*Path p2(graph);
+
+	for(int i=0; i<graph.get_cities(); i++){
+		p1.add(i);
+		p2.add(i);
+	}
+	p1.add(0);
+	p2.add(0);
+
+	p1.shuffle_all();
+	p2.shuffle_all();
+
+	std::cout<<p1.to_string()<<std::endl;
+	std::cout<<p2.to_string()<<std::endl;
+	std::cout<<"--------------------------------"<<std::endl;*/
+	p1 = ga.solve(graph);
+
+	std::cout<<"--------------------------------"<<std::endl;
+	//std::cout<<p1.to_string()<<std::endl;
+	std::cout<<p1.path_distance()<<std::endl;
+	std::cout<<"--------------------------------"<<std::endl;
+	std::cout<<graph.get_best_dist()<<std::endl;
+
+	
+}
+
+int main4(){
 	
 	Graph graph("tsp_24.txt");
 	Path p1(graph);
@@ -33,9 +67,86 @@ int main3(){
 
 }
 
-
-
 int main(){
+
+
+	std::cout<<"___ __  _     _     _   _  _  ___       _     ___ _  _       "<<std::endl;
+ 	std::cout<<" | (_  |_)   |_ \\/ |_) |_ |_)  |  |\\/| |_ |\\ | | |_ |_)   "<<std::endl;
+ 	std::cout<<" | __) |     |_ /\\ |   |_ | \\ _|_ |  | |_ | \\| | |_ | \\  "<<std::endl<<std::endl;
+	std::cout<<"▄▀▀▀▀▄      ▄▀▀█▄   ▄▀▀▀▀▄  ▄▀▀▀█▀▀▄      ▄▀▀▄▀▀▀▄  ▄▀▀█▄   ▄▀▀▄▀▀▀▄  ▄▀▀▀█▀▀▄ "<<std::endl;
+	std::cout<<"█    █      ▐ ▄▀ ▀▄ █ █   ▐ █    █  ▐     █   █   █ ▐ ▄▀ ▀▄ █   █   █ █    █  ▐ "<<std::endl;
+	std::cout<<"▐    █        █▄▄▄█    ▀▄   ▐   █         ▐  █▀▀▀▀    █▄▄▄█ ▐  █▀▀█▀  ▐   █     "<<std::endl;
+	std::cout<<"    █        ▄▀   █ ▀▄   █     █             █       ▄▀   █  ▄▀    █     █      "<<std::endl;
+	std::cout<<"  ▄▀▄▄▄▄▄▄▀ █   ▄▀   █▀▀▀    ▄▀            ▄▀       █   ▄▀  █     █    ▄▀       "<<std::endl;
+	std::cout<<"  █         ▐   ▐    ▐      █             █         ▐   ▐   ▐     ▐   █         "<<std::endl;
+	std::cout<<"  ▐                         ▐             ▐                           ▐         "<<std::endl;
+
+
+
+	std::string file_names[8] = {"tsp_17_2.txt", "tsp_21.txt", "tsp_24.txt", "tsp_26.txt", 
+									"tsp_29.txt", "tsp_42.txt", "tsp_58.txt", "tsp_120.txt"};
+
+
+	Graph graph;
+
+	try{								
+		graph.read(file_names[4]);
+	}
+	catch(std::string ex){
+		std::cout<<ex<<std::endl;
+		return 0;
+	}
+
+	std::cout<<graph.get_cities()<<std::endl;
+
+	GeneticAlg ga;
+
+	/* Populacja 20-200
+	 * Elita 0-50
+	 * mutacje 0-0.1 co 0.01
+	 * cros
+	 *
+	 *
+	 *
+	 *
+	 *
+	 */
+
+	std::ofstream file("../pomiary3/ga-cros-blad.csv");
+
+	for(int i=0; i<8; i++){
+		try{								
+			graph.read(file_names[i]);
+		}
+		catch(std::string ex){
+			std::cout<<ex<<std::endl;
+			return 0;
+		}
+		Path p1(graph);
+		file<<file_names[i]<<","<<std::endl;
+		std::cout<<file_names[i]<<std::endl;
+
+
+		for(float j=0; j<3; j+=1){
+			//           Popul elite muta 시대들 시간 cros mutaType
+			ga.set_param(80,     30, 0.05, 1000,  2,  j,    2);
+
+			double w=0;
+			
+			for(int k=0; k<10; k++){
+				p1 = ga.solve(graph);
+				w+= p1.path_distance();
+			}
+			file<<w/4<<","<<graph.get_best_dist()<<","<<j<<","<<std::endl;
+		}
+
+	}
+
+
+
+}
+
+int main3(){
 
 
 	std::cout<<"___ __  _     _     _   _  _  ___       _     ___ _  _       "<<std::endl;

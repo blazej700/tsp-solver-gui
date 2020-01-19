@@ -20,7 +20,7 @@ int Path::size(){
 }
 
 
-int Path::path_distance(){
+int Path::path_distance() const{
 	int _distance = 0;
 
 	for(int i = 0; i < path.size() - 1; i++){  
@@ -39,6 +39,11 @@ int Path::path_distance_to(int n){
 	}
 	return _distance;
 }
+
+int Path::get(int n){
+	return path[n];
+}
+
 
 void Path::add(int n){
 	path.push_back(n);
@@ -151,4 +156,64 @@ void Path::shuffle(int i, int j){
 	for(int l=i; l<j+1; l++){
 		path[l]=tmp_vector[l-i];
 	}
+}
+
+void Path::shuffle_all(){
+	shuffle(1, path.size()-2);
+}
+
+bool Path::operator<(const Path &other) const{
+        return path_distance() < other.path_distance();
+}
+
+std::vector<int> Path::get_vec_from_to(int from, int to){
+	std::vector<int> tmp;
+	for(int i=from; i<to; i++){
+		tmp.push_back(path[i]);
+	}
+	return tmp;
+}
+
+void Path::rotate(int n){
+	std::vector<int> first;
+	std::vector<int> second;
+
+	for(int i = n; i<path.size(); i++){
+		first.push_back(path[i]);
+	}
+	for(int i = 0; i<n; i++){
+		second.push_back(path[i]);
+	}
+
+	first.insert(first.end(), second.begin(), second.end());
+	path = first;
+}
+
+bool Path::is_in(int x){
+
+	for(int i=0; i<path.size(); i++){
+		if(path[i]==x){
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+int Path::index_of(int x){
+
+	for(int i=0; i<path.size(); i++){
+		if(path[i]==x){
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+void Path::join(Path patha){
+	std::vector<int> tmp;
+	tmp = patha.get_vec();
+	path.insert(path.end(), tmp.begin(), tmp.end());
 }

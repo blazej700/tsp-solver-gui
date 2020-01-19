@@ -73,6 +73,7 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     tsp.Add("Dynamic programming");
     tsp.Add("Simulating annealing");
     tsp.Add("Tabu search");
+    tsp.Add("Genetic algorithm");
     sChoice  = new wxChoice(panel, wxID_ANY, wxDefaultPosition, wxDefaultSize,tsp);
 
     wxStaticLine *line1 = new wxStaticLine(panel, wxID_ANY);
@@ -172,7 +173,7 @@ void MyFrame::Load(wxCommandEvent& event){
 
 void MyFrame::ChangeSolver(wxCommandEvent& event){
 
-    if(sChoice->GetSelection() == 3 || sChoice->GetSelection() == 4)
+    if(sChoice->GetSelection() == 3 || sChoice->GetSelection() == 4 || sChoice->GetSelection() == 5)
         but5->Enable(true);
     else
         but5->Disable();
@@ -254,6 +255,13 @@ void MyFrame::Solver(wxCommandEvent& event){
         time = std::chrono::duration_cast<std::chrono::duration<double>>(timeStop - timeStart);
         itrValText->SetLabel("N/A");
     }
+    else if(n==5){
+        timeStart = std::chrono::high_resolution_clock::now();
+        p1 = ga.solve(graph);
+        timeStop = std::chrono::high_resolution_clock::now();
+        time = std::chrono::duration_cast<std::chrono::duration<double>>(timeStop - timeStart);
+        itrValText->SetLabel("N/A");
+    }
 	else{
 		wxEndBusyCursor();
 		wxMessageBox( "Please choose a solver", "Error", wxICON_ERROR );
@@ -313,10 +321,16 @@ void MyFrame::Param(wxCommandEvent& event){
         //frame4->Close(true);
         frame4=nullptr;
     }
+    if(frame5!=nullptr){
+        //frame4->Close(true);
+        frame5=nullptr;
+    }
     if(sChoice->GetSelection()==3 && (frame3==nullptr))
         SaParam();
     else if(sChoice->GetSelection()==4 && (frame4==nullptr))
         TsParam();
+    else if(sChoice->GetSelection()==5 && (frame5==nullptr))
+        GsParam();
 
     return;
 }
@@ -506,3 +520,130 @@ void MyFrame::SaParamColse(wxCloseEvent &event)
     but5->Enable(true);
 }
 
+/*
+
+    wxFrame *frame5;
+    wxChoice *GsMChoice;
+    wxChoice *GsCChoice;
+    wxTextCtrl *population_sizeInput;
+    wxTextCtrl *elite_sizeInput;
+    wxTextCtrl *mutation_rateInput;
+    wxTextCtrl *generationsInput;
+    wxTextCtrl *run_timeInput;
+*/
+
+void MyFrame::GsParam(){
+
+    frame5 = new wxFrame(this,  wxID_ANY, "Options", wxPoint(50, 50), wxSize(200, 200));
+    wxPanel *panel5 = new wxPanel(frame5);
+
+    wxBoxSizer *GsSizer = new wxBoxSizer(wxVERTICAL);
+    wxGridBagSizer *GsSizer1 = new wxGridBagSizer(10,10);
+
+    wxArrayString neib;
+    neib.Add("Swap");
+    neib.Add("Insert");
+    neib.Add("Invert");
+
+    wxArrayString cros;
+    cros.Add("OX");
+    cros.Add("PMX");
+    cros.Add("NWOX");
+
+    wxStaticText *GsMChoiceText = new wxStaticText(panel5, wxID_ANY, "Mutation type:");
+    GsMChoice = new wxChoice(panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize,neib);
+
+    wxStaticText *GsCChoiceText = new wxStaticText(panel5, wxID_ANY, "Crossover type:");
+    GsCChoice = new wxChoice(panel5, wxID_ANY, wxDefaultPosition, wxDefaultSize,cros);
+    
+    wxStaticText *population_sizeText = new wxStaticText(panel5, wxID_ANY, "Population size:");
+    population_sizeInput = new wxTextCtrl(panel5, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
+
+    wxStaticText *elite_sizeText = new wxStaticText(panel5, wxID_ANY, "Elite size:");
+    elite_sizeInput = new wxTextCtrl(panel5, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
+
+    wxStaticText *mutation_rateText = new wxStaticText(panel5, wxID_ANY, "Mutation rate:");
+    mutation_rateInput = new wxTextCtrl(panel5, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
+
+    wxStaticText *generationsText = new wxStaticText(panel5, wxID_ANY, "Generations:");
+    generationsInput = new wxTextCtrl(panel5, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
+
+    wxStaticText *Grun_timeText = new wxStaticText(panel5, wxID_ANY, "Run time:");
+    Grun_timeInput = new wxTextCtrl(panel5, wxID_ANY, "", wxDefaultPosition, wxDefaultSize);
+
+    wxButton *butt1 = new wxButton(panel5, wxID_ANY, "Save and close");
+
+    GsSizer1->Add(GsMChoiceText, wxGBPosition(0,0), wxGBSpan(1,1), wxEXPAND | wxALL, 2);
+    GsSizer1->Add(GsMChoice, wxGBPosition(0,1), wxGBSpan(1,1), wxEXPAND | wxALL, 2);
+
+    GsSizer1->Add(GsCChoiceText, wxGBPosition(1,0), wxGBSpan(1,1), wxEXPAND | wxALL, 2);
+    GsSizer1->Add(GsCChoice, wxGBPosition(1,1), wxGBSpan(1,1), wxEXPAND | wxALL, 2);
+
+    GsSizer1->Add(population_sizeText, wxGBPosition(2,0), wxGBSpan(1,1), wxEXPAND | wxALL, 2);
+    GsSizer1->Add(population_sizeInput, wxGBPosition(2,1), wxGBSpan(1,1), wxEXPAND | wxALL, 2);
+
+    GsSizer1->Add(elite_sizeText, wxGBPosition(3,0), wxGBSpan(1,1), wxEXPAND | wxALL, 2);
+    GsSizer1->Add(elite_sizeInput, wxGBPosition(3,1), wxGBSpan(1,1), wxEXPAND | wxALL, 2);
+
+    GsSizer1->Add(mutation_rateText, wxGBPosition(4,0), wxGBSpan(1,1), wxEXPAND | wxALL, 2);
+    GsSizer1->Add(mutation_rateInput, wxGBPosition(4,1), wxGBSpan(1,1), wxEXPAND | wxALL, 2);
+
+    GsSizer1->Add(generationsText, wxGBPosition(5,0), wxGBSpan(1,1), wxEXPAND | wxALL, 2);
+    GsSizer1->Add(generationsInput, wxGBPosition(5,1), wxGBSpan(1,1), wxEXPAND | wxALL, 2);
+
+    GsSizer1->Add(Grun_timeText, wxGBPosition(6,0), wxGBSpan(1,1), wxEXPAND | wxALL, 2);
+    GsSizer1->Add(Grun_timeInput, wxGBPosition(6,1), wxGBSpan(1,1), wxEXPAND | wxALL, 2);
+
+    GsSizer1->Add(butt1, wxGBPosition(7,1), wxGBSpan(1,1), wxEXPAND | wxALL, 2);
+
+    butt1->Bind(wxEVT_BUTTON, &MyFrame::GsParamHandler, this);
+    //frame4->Bind(wxEVT_CLOSE_WINDOW, &MyFrame::TsParamHandler, wxID_EXIT);
+
+    GsCChoice->SetSelection(ga.get_crossover_type());
+    GsMChoice->SetSelection(ga.get_mutation_type());
+
+    (*population_sizeInput)<<std::to_string(ga.get_population_size());
+    (*elite_sizeInput)<<std::to_string(ga.get_elite_size());
+    (*mutation_rateInput)<<std::to_string(ga.get_mutation_rate());
+    (*generationsInput)<<std::to_string(ga.get_generations());
+    (*Grun_timeInput)<<std::to_string(ga.get_run_time());
+
+    GsSizer->Add(GsSizer1, 0, wxALL, 10);
+    panel5->SetSizer(GsSizer);
+
+    GsSizer->Fit(frame5);
+    frame5->Show(true);
+}
+/*
+ * GeneticAlg(int population_size, int elite_size, float mutation_rate, 
+               int generations, int run_time, int crossover_type, 
+               int mutation_type);
+ */
+
+void MyFrame::GsParamHandler(wxCommandEvent& event){
+
+    try {
+    ga.set_param(std::stoi(population_sizeInput->GetLineText(0).ToStdString()), 
+                 std::stoi(elite_sizeInput->GetLineText(0).ToStdString()), 
+                 std::stof(mutation_rateInput->GetLineText(0).ToStdString()), //float
+                 std::stoi(generationsInput->GetLineText(0).ToStdString()), 
+                 std::stoi(Grun_timeInput->GetLineText(0).ToStdString()),
+                 GsCChoice->GetSelection(),
+                 GsMChoice->GetSelection());
+    }
+    catch (const std::invalid_argument& ia) {
+        wxMessageBox( "Invalid argument", "Error", wxICON_ERROR );
+        return;
+    }
+
+    frame5->Close(true);
+    frame5=nullptr;
+    but5->Enable(true);
+}
+
+void MyFrame::GsParamColse(wxCloseEvent &event)
+{
+    frame5->Close(true);
+    frame5=nullptr;
+    but5->Enable(true);
+}

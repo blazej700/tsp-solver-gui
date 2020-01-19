@@ -138,7 +138,7 @@ void Graph::random(int cities){
 	return;
 }
 
-int Graph::get_distance(int from, int to){
+int Graph::get_distance(int from, int to) const{
 	if(from < cities && to < cities && _opened)
 		return matrix[from][to];
 	else

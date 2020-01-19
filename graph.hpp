@@ -17,7 +17,7 @@ public:
 	void read(std::string file_name);
 	std::string to_string();
 	int get_cities();
-	int get_distance(int from, int to);
+	int get_distance(int from, int to) const;
 	bool read_best(std::string file_name);
 	std::string get_best_path();
 	std::string get_best_dist();

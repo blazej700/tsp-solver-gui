@@ -18,6 +18,7 @@
 #include "dp.hpp"
 #include "sa.hpp"
 #include "ts.hpp"
+#include "ga.hpp"
 
 #ifndef WX_PRECOMP
     #include <wx/wx.h>
@@ -30,6 +31,7 @@ class MyFrame: public wxFrame
 	Graph graph;
 	SimAnnealing sa;
 	TabuSearch ts;
+    GeneticAlg ga;
 
 	wxButton *but5;
 
@@ -63,6 +65,15 @@ class MyFrame: public wxFrame
     wxTextCtrl *stop_thresholdInput;
     wxTextCtrl *Trun_timeInput;
 
+    wxFrame *frame5;
+    wxChoice *GsMChoice;
+    wxChoice *GsCChoice;
+    wxTextCtrl *population_sizeInput;
+    wxTextCtrl *elite_sizeInput;
+    wxTextCtrl *mutation_rateInput;
+    wxTextCtrl *generationsInput;
+    wxTextCtrl *Grun_timeInput;
+
 	void OnExit(wxCommandEvent& event);
     void a1(wxCommandEvent& event);
     void Load(wxCommandEvent& event);
@@ -77,6 +88,10 @@ class MyFrame: public wxFrame
     void TsParamHandler(wxCommandEvent& event);
     void SaParamColse(wxCloseEvent &event);
     void TsParamColse(wxCloseEvent &event);
+
+    void GsParam();
+    void GsParamHandler(wxCommandEvent& event);
+    void GsParamColse(wxCloseEvent &event);
 
     wxDECLARE_EVENT_TABLE();
 

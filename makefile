@@ -14,16 +14,16 @@ CXXFLAGS = -std=c++11 -Wall
 
 
 
-test1.out: main.o graph.o path.o bf.o bb.o dp.o sa.o ts.o
+test1.out: main.o graph.o path.o bf.o bb.o dp.o sa.o ts.o ga.o
 	${CXX} ${CXXFLAGS} $^ -o $@ 
 
-tspSolver.out: guiMain.o gui.o graph.o path.o bf.o bb.o dp.o sa.o ts.o 
+tspSolver.out: guiMain.o gui.o graph.o path.o bf.o bb.o dp.o sa.o ts.o ga.o
 	${CXX} ${CXXFLAGS} $^ -o $@ `wx-config-gtk3 --cxxflags --libs`
 
-main.o: main.cc graph.cc graph.hpp path.cc path.hpp bf.cc bf.hpp bb.cc bb.hpp dp.cc dp.hpp sa.cc sa.hpp ts.cc ts.hpp
+main.o: main.cc graph.cc graph.hpp path.cc path.hpp bf.cc bf.hpp bb.cc bb.hpp dp.cc dp.hpp sa.cc sa.hpp ts.cc ts.hpp ga.hpp
 	${CXX} ${CXXFLAGS} -c $< -o $@ 
 
-gui.o: gui.cc gui.hpp graph.hpp path.hpp bf.hpp bb.hpp dp.hpp sa.cc sa.hpp ts.cc ts.hpp
+gui.o: gui.cc gui.hpp graph.hpp path.hpp bf.hpp bb.hpp dp.hpp sa.cc sa.hpp ts.cc ts.hpp ga.hpp
 	${CXX} ${CXXFLAGS} -c $< -o $@ `wx-config-gtk3 --cxxflags --libs`
 
 guiMain.o: guiMain.cc gui.cc gui.hpp
@@ -48,6 +48,9 @@ sa.o: sa.cc sa.hpp graph.hpp path.hpp
 	${CXX} ${CXXFLAGS} -c $< -o $@
 
 ts.o: ts.cc ts.hpp graph.hpp path.hpp
+	${CXX} ${CXXFLAGS} -c $< -o $@
+
+ga.o: ga.cc ga.hpp graph.hpp path.hpp
 	${CXX} ${CXXFLAGS} -c $< -o $@
 
 
